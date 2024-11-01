@@ -49,6 +49,7 @@ class Model(nn.Module):
             configs.d_model, patch_len, stride, padding, configs.dropout)
 
         # Encoder
+        # 用到的是Vanilla Transformer的encoder
         self.encoder = Encoder(
             [
                 EncoderLayer(
@@ -59,17 +60,17 @@ class Model(nn.Module):
                     configs.d_ff,
                     dropout=configs.dropout,
                     activation=configs.activation
-                ) for l in range(configs.e_layers)
+                ) for l in range(configs.e_layers)  # encoder层数堆
             ],
-            norm_layer=nn.Sequential(Transpose(1,2), nn.BatchNorm1d(configs.d_model), Transpose(1,2))
+            norm_layer=nn.Sequential(Transpose(1,2), nn.BatchNorm1d(configs.d_model), Transpose(1,2))    # LayerNormalization
         )
 
         # Prediction Head
         self.head_nf = configs.d_model * \
-                       int((configs.seq_len - patch_len) / stride + 2)
-        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':
+                       int((configs.seq_len - patch_len) / stride + 2)  # head_nf: 用于head的特征数
+        if self.task_name == 'long_term_forecast' or self.task_name == 'short_term_forecast':   # 长/短期预测
             self.head = FlattenHead(configs.enc_in, self.head_nf, configs.pred_len,
-                                    head_dropout=configs.dropout)
+                                    head_dropout=configs.dropout)       # 做flatten展平做预测
         elif self.task_name == 'imputation' or self.task_name == 'anomaly_detection':
             self.head = FlattenHead(configs.enc_in, self.head_nf, configs.seq_len,
                                     head_dropout=configs.dropout)
@@ -81,10 +82,11 @@ class Model(nn.Module):
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
         # Normalization from Non-stationary Transformer
-        means = x_enc.mean(1, keepdim=True).detach()
-        x_enc = x_enc - means
+        # 参考Non-stationary Transformer的归一化 减去均值除以标准差
+        means = x_enc.mean(1, keepdim=True).detach()        # 均值
+        x_enc = x_enc - means       # 减去均值
         stdev = torch.sqrt(
-            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
+            torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)       # 标准差
         x_enc /= stdev
 
         # do patching and embedding

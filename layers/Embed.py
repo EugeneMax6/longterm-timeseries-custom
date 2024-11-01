@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.nn.utils import weight_norm
 import math
 
-
+# PositionalEmbedding是一个位置编码层，用于对序列的每个位置进行编码
 class PositionalEmbedding(nn.Module):
     def __init__(self, d_model, max_len=5000):
         super(PositionalEmbedding, self).__init__()
@@ -98,6 +98,7 @@ class TemporalEmbedding(nn.Module):
         return hour_x + weekday_x + day_x + month_x + minute_x  # 返回所有的编码相加
 
 
+# 对时间特征进行编码
 class TimeFeatureEmbedding(nn.Module):
     def __init__(self, d_model, embed_type='timeF', freq='h'):
         super(TimeFeatureEmbedding, self).__init__()
@@ -167,7 +168,7 @@ class DataEmbedding_wo_pos(nn.Module):
             x = self.value_embedding(x) + self.temporal_embedding(x_mark)
         return self.dropout(x)
 
-
+# PatchEmbedding是将输入的序列分成多个patch，然后对每个patch进行embedding
 class PatchEmbedding(nn.Module):
     def __init__(self, d_model, patch_len, stride, padding, dropout):
         super(PatchEmbedding, self).__init__()

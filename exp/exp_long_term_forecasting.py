@@ -118,11 +118,11 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     with torch.cuda.amp.autocast():
                         outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
 
-                        f_dim = -1 if self.args.features == 'MS' else 0
-                        outputs = outputs[:, -self.args.pred_len:, f_dim:]
-                        batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
-                        loss = criterion(outputs, batch_y)
-                        train_loss.append(loss.item())
+                        f_dim = -1 if self.args.features == 'MS' else 0     # 特征维度 -1: 多维特征 0: 单维特征
+                        outputs = outputs[:, -self.args.pred_len:, f_dim:]      # 取预测长度的输出
+                        batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)  # 取预测长度的真实值
+                        loss = criterion(outputs, batch_y)  # 计算损失
+                        train_loss.append(loss.item())  # 训练损失 append 进去
                 else:
                     outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
 

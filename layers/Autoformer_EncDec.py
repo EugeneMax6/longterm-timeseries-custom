@@ -21,7 +21,7 @@ class my_Layernorm(nn.Module):
         bias = torch.mean(x_hat, dim=1).unsqueeze(1).repeat(1, x.shape[1], 1)
         return x_hat - bias
 
-
+# 移动平均分解
 class moving_avg(nn.Module):
     """
     Moving average block to highlight the trend of time series
@@ -34,11 +34,11 @@ class moving_avg(nn.Module):
 
     def forward(self, x):
         # padding on the both ends of time series
-        front = x[:, 0:1, :].repeat(1, (self.kernel_size - 1) // 2, 1)
-        end = x[:, -1:, :].repeat(1, (self.kernel_size - 1) // 2, 1)
-        x = torch.cat([front, x, end], dim=1)
+        front = x[:, 0:1, :].repeat(1, (self.kernel_size - 1) // 2, 1) # 选择第一条数据，然后重复kernel_size - 1) // 2次
+        end = x[:, -1:, :].repeat(1, (self.kernel_size - 1) // 2, 1) # 选择最后一条数据，然后重复kernel_size - 1) // 2次
+        x = torch.cat([front, x, end], dim=1)       # 原始序列的开始和结束部分都添加了填充
         x = self.avg(x.permute(0, 2, 1))
-        x = x.permute(0, 2, 1)
+        x = x.permute(0, 2, 1)  # 最后维度不会变
         return x
 
 # 时序分解块 分离季节性和趋势性

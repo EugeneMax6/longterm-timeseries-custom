@@ -5,6 +5,7 @@ from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLay
 from layers.SelfAttention_Family import ProbAttention, AttentionLayer
 from layers.Embed import DataEmbedding
 
+# Informer模型
 
 class Model(nn.Module):
     """
