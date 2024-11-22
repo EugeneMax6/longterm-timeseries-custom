@@ -2,7 +2,7 @@ import os
 import torch
 from models import Autoformer, Transformer, TimesNet, Nonstationary_Transformer, DLinear, FEDformer, \
     Informer, LightTS, Reformer, ETSformer, Pyraformer, PatchTST, MICN, Crossformer, FiLM, iTransformer, \
-    Koopa, TiDE, FreTS, TimeMixer, TSMixer, SegRNN, MambaSimple, TemporalFusionTransformer, SCINet
+    Koopa, TiDE, FreTS, TimeMixer, TSMixer, SegRNN, MambaSimple, TemporalFusionTransformer, SCINet, RLinear
 
 # 基础的实验类 在下面的dict里加入新的模型的内容
 class Exp_Basic(object):
@@ -34,6 +34,7 @@ class Exp_Basic(object):
             'TSMixer': TSMixer,
             'SegRNN': SegRNN,
             'TemporalFusionTransformer': TemporalFusionTransformer,
+            'RLinear':RLinear,
             "SCINet": SCINet
         }
         # 如果使用Mamba模型
