@@ -2,7 +2,7 @@ import os
 import torch
 from models import Autoformer, Transformer, TimesNet, Nonstationary_Transformer, DLinear, FEDformer, \
     Informer, LightTS, Reformer, ETSformer, Pyraformer, PatchTST, MICN, Crossformer, FiLM, iTransformer, \
-    Koopa, TiDE, FreTS, TimeMixer, TSMixer, SegRNN, MambaSimple, TemporalFusionTransformer, SCINet, Edited_TimesNet
+    Koopa, TiDE, FreTS, TimeMixer, TSMixer, SegRNN, MambaSimple, TemporalFusionTransformer, SCINet
 
 # 基础的实验类 在下面的dict里加入新的模型的内容
 class Exp_Basic(object):
@@ -11,7 +11,6 @@ class Exp_Basic(object):
         # 模型的dict
         self.model_dict = {
             'TimesNet': TimesNet,
-            'Edited_TimesNet': Edited_TimesNet,     # 尝试修改的TimesNet
             'Autoformer': Autoformer,
             'Transformer': Transformer,
             'Nonstationary_Transformer': Nonstationary_Transformer,
